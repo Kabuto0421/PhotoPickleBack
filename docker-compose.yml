@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  mariadb:
+    build: ./mariadb/
+    container_name: photopickle-db
+    ports:
+      - 3306:3306
+    environment:
+      MARIADB_RANDOM_ROOT_PASSWORD: yes
+      ENV MARIADB_USER: dbuser
+      ENV MARIADB_PASSWORD: Ay6WpmzWsU862d
+    tty: true
+    # restart: always
+
+  go-api:
+    build: ./go-api/
+    container_name: photopickle-go-api
+    depends_on:
+      - mariadb
+    tty: true
+    # restart: always
+
+  python-api:
+    build: ./python-api/
+    container_name: photopickle-python-api
+    depends_on:
+      - mariadb
+    tty: true
+    # restart: always
+
+  # デバッグ用
+  phpmyadmin:
+    image: phpmyadmin
+    depends_on:
+      - mariadb
+    tty: true
+    # restart: always
